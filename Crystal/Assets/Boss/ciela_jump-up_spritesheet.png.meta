@@ -1,0 +1,325 @@
+fileFormatVersion: 2
+guid: 151a8ae51a9e1174c8b15bca739206b0
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8965496842064078827
+    second: ciela_jump-up_spritesheet_0
+  - first:
+      213: 6616637627819547904
+    second: ciela_jump-up_spritesheet_1
+  - first:
+      213: -5800243998817851538
+    second: ciela_jump-up_spritesheet_2
+  - first:
+      213: 1788937211202821340
+    second: ciela_jump-up_spritesheet_3
+  - first:
+      213: -8166555204582351057
+    second: ciela_jump-up_spritesheet_4
+  - first:
+      213: -8460664579640218319
+    second: ciela_jump-up_spritesheet_5
+  - first:
+      213: -6036451118595081142
+    second: ciela_jump-up_spritesheet_6
+  - first:
+      213: 7547134634322462514
+    second: ciela_jump-up_spritesheet_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 910
+        y: 7697
+        width: 1675
+        height: 2338
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51852e59f18249380800000000000000
+      internalID: -8965496842064078827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 4494
+        y: 7702
+        width: 1394
+        height: 1865
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00ddaa5bdd403db50800000000000000
+      internalID: 6616637627819547904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 7995
+        y: 7689
+        width: 1379
+        height: 1814
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e67eed760d4618fa0800000000000000
+      internalID: -5800243998817851538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 3814
+        width: 1091
+        height: 2960
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdcd8375ae493d810800000000000000
+      internalID: 1788937211202821340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 4502
+        y: 4077
+        width: 1187
+        height: 2636
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2f50484f419aae80800000000000000
+      internalID: -8166555204582351057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 7867
+        y: 4371
+        width: 1362
+        height: 2319
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13da0de246ea59a80800000000000000
+      internalID: -8460664579640218319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 503
+        width: 2339
+        height: 2674
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4c712ca0b73a3ca0800000000000000
+      internalID: -6036451118595081142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 3984
+        y: 478
+        width: 2192
+        height: 2699
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23786d6a6feccb860800000000000000
+      internalID: 7547134634322462514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ciela_jump-up_spritesheet_0: -8965496842064078827
+      ciela_jump-up_spritesheet_1: 6616637627819547904
+      ciela_jump-up_spritesheet_2: -5800243998817851538
+      ciela_jump-up_spritesheet_3: 1788937211202821340
+      ciela_jump-up_spritesheet_4: -8166555204582351057
+      ciela_jump-up_spritesheet_5: -8460664579640218319
+      ciela_jump-up_spritesheet_6: -6036451118595081142
+      ciela_jump-up_spritesheet_7: 7547134634322462514
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
