@@ -14,6 +14,7 @@ public class SpiderGirlController : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 6f;
+    [SerializeField] private Transform enemyTransform;
 
     [Header("Jump")]
     [SerializeField] private float jumpForce = 14f;
@@ -28,8 +29,10 @@ public class SpiderGirlController : MonoBehaviour
 
     // ── Animator parameter names ─────────────────────────────────────────────
 
-    private static readonly int AnimRunning = Animator.StringToHash("running");
-    private static readonly int AnimJump    = Animator.StringToHash("jump");
+    private static readonly int AnimRunning   = Animator.StringToHash("running");
+    private static readonly int AnimCeiling   = Animator.StringToHash("ceiling");
+    private static readonly int AnimJump      = Animator.StringToHash("jump");
+    private static readonly int AnimBackwards = Animator.StringToHash("backwards");
 
     // ── State ────────────────────────────────────────────────────────────────
 
@@ -107,7 +110,29 @@ public class SpiderGirlController : MonoBehaviour
     {
         HorizontalInput = value.Get<Vector2>().x;
         _animator?.SetBool(AnimRunning, HorizontalInput != 0f);
+        
+        UpdateBackwardsParameter();
+        
         Debug.Log($"[SpiderGirl] OnMove — horizontalInput={HorizontalInput:F2}");
+    }
+
+    /// <summary>Updates the 'backwards' animator parameter based on movement relative to the enemy.</summary>
+    private void UpdateBackwardsParameter()
+    {
+        if (_animator == null || enemyTransform == null || HorizontalInput == 0f)
+        {
+            _animator?.SetBool(AnimBackwards, false);
+            return;
+        }
+
+        // Determine direction to enemy (positive if enemy is to the right)
+        float directionToEnemy = enemyTransform.position.x - transform.position.x;
+        
+        // "Backwards" is true if moving left while enemy is right, or moving right while enemy is left.
+        bool isMovingAway = (HorizontalInput > 0f && directionToEnemy < 0f) || 
+                            (HorizontalInput < 0f && directionToEnemy > 0f);
+        
+        _animator.SetBool(AnimBackwards, isMovingAway);
     }
 
     /// <summary>Receives the Jump action.</summary>
@@ -142,6 +167,7 @@ public class SpiderGirlController : MonoBehaviour
         {
             Debug.Log($"[SpiderGirl] DetectSurfaces — onCeiling changed to {_isOnCeiling}");
             _spriteFlip?.Flip();
+            _animator?.SetBool(AnimCeiling, _isOnCeiling);
         }
     }
 

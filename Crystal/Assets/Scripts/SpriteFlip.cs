@@ -6,8 +6,8 @@ using UnityEngine;
 /// </summary>
 public class SpriteFlip : MonoBehaviour
 {
-    private const float FlippedScale   = -1f;
-    private const float UnflippedScale =  1f;
+    private const float FlippedScale   = -.2f;
+    private const float UnflippedScale =  .2f;
 
     private bool _isFlipped;
 
