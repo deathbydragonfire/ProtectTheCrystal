@@ -7,7 +7,9 @@ namespace Crystal.HeroEnemy
     {
         [Header("References")]
         [SerializeField] private HeroEnemyMotor motor;
+        [SerializeField] private HeroEnemyFacingController facingController;
         [SerializeField] private HeroSpriteFrameAnimator spriteAnimator;
+        [SerializeField] private Animator animator;
         [SerializeField] private Transform bowOrigin;
         [SerializeField] private Transform plungeHitOrigin;
 
@@ -19,6 +21,7 @@ namespace Crystal.HeroEnemy
         [SerializeField] private float bowDamage = 8f;
         [SerializeField] private float bowAimDuration = 0.35f;
         [SerializeField] private float movingBowAimDuration = 0.5f;
+        [SerializeField] private float bowFireDelay = 0.2f;
         [SerializeField] private float bowRecovery = 0.2f;
         [SerializeField] private float bowCooldown = 1.1f;
         [SerializeField] private float movingBowCooldownMultiplier = 1.4f;
@@ -44,6 +47,8 @@ namespace Crystal.HeroEnemy
 
         public event System.Action BowFired;
         public event System.Action<bool> PlungeCompleted;
+
+        private static readonly int FiringHash = Animator.StringToHash("firing");
 
         private Coroutine activeAttack;
         private float nextBowTime;
@@ -108,8 +113,14 @@ namespace Crystal.HeroEnemy
             if (motor == null)
                 motor = GetComponent<HeroEnemyMotor>();
 
+            if (facingController == null)
+                facingController = GetComponent<HeroEnemyFacingController>();
+
             if (spriteAnimator == null)
                 spriteAnimator = GetComponent<HeroSpriteFrameAnimator>();
+
+            if (animator == null)
+                animator = GetComponentInChildren<Animator>(true);
         }
 
         private IEnumerator BowRoutine(CombatHealth targetHealth, Transform targetTransform, bool aggressive, bool moving = false)
@@ -118,17 +129,33 @@ namespace Crystal.HeroEnemy
                 motor?.StopHorizontal();
 
             if (targetTransform != null)
+            {
+                facingController?.LockFacingToward(targetTransform.position);
                 motor?.FacePosition(targetTransform.position);
+            }
 
+            animator?.SetBool(FiringHash, true);
             spriteAnimator?.Play(HeroAnimationAction.AimBow, true);
             yield return new WaitForSeconds(moving ? movingBowAimDuration : bowAimDuration);
 
+            // Re-check position just before firing in case Ciela moved.
+            if (targetTransform != null)
+            {
+                facingController?.LockFacingToward(targetTransform.position);
+                motor?.FacePosition(targetTransform.position);
+            }
+
             spriteAnimator?.Play(HeroAnimationAction.ShootBow, true);
+            if (bowFireDelay > 0f)
+                yield return new WaitForSeconds(bowFireDelay);
             ShootArrow(targetHealth, targetTransform);
             BowFired?.Invoke();
 
             nextBowTime = Time.time + GetCooldown(bowCooldown, aggressive) * (moving ? movingBowCooldownMultiplier : 1f);
             yield return new WaitForSeconds(bowRecovery);
+            animator?.SetBool(FiringHash, false);
+
+            facingController?.UnlockFacing();
             activeAttack = null;
         }
 
@@ -277,6 +304,7 @@ namespace Crystal.HeroEnemy
             bowDamage = Mathf.Max(0f, bowDamage);
             bowAimDuration = Mathf.Max(0f, bowAimDuration);
             movingBowAimDuration = Mathf.Max(0f, movingBowAimDuration);
+            bowFireDelay = Mathf.Max(0f, bowFireDelay);
             bowRecovery = Mathf.Max(0f, bowRecovery);
             bowCooldown = Mathf.Max(0f, bowCooldown);
             movingBowCooldownMultiplier = Mathf.Max(0f, movingBowCooldownMultiplier);

@@ -55,8 +55,14 @@ namespace Crystal.HeroEnemy
         [SerializeField] private float landingSettleTime = 0.08f;
         [SerializeField] private float airborneRouteHoldTime = 0.12f;
 
+        [Header("Animation")]
+        [SerializeField] private Animator animator;
+
         [Header("Facing")]
         [SerializeField] private bool spriteFacesRightByDefault = true;
+
+        private static readonly int WalkingHash = Animator.StringToHash("walking");
+        private static readonly int VerticalVelocityHash = Animator.StringToHash("verticalVelocity");
 
         private Rigidbody2D body;
         private Collider2D bodyCollider;
@@ -251,6 +257,9 @@ namespace Crystal.HeroEnemy
 
             if (platformNavigator == null)
                 platformNavigator = GetComponent<HeroPlatformNavigator>();
+
+            if (animator == null)
+                animator = GetComponentInChildren<Animator>(true);
         }
 
         private void Update()
@@ -277,6 +286,20 @@ namespace Crystal.HeroEnemy
 
             if (Time.time < dashUntilTime)
                 body.linearVelocity = new Vector2(activeDashDirection * dashSpeed, body.linearVelocity.y);
+
+            UpdateAnimatorParameters();
+        }
+
+        /// <summary>Pushes walking and vertical velocity parameters to the Animator every movement update.</summary>
+        private void UpdateAnimatorParameters()
+        {
+            if (animator == null)
+                return;
+
+            bool isWalking = IsGrounded && Mathf.Abs(body.linearVelocity.x) > movementDeadZone;
+            animator.SetBool(WalkingHash, isWalking);
+            float verticalDir = Mathf.Abs(body.linearVelocity.y) > movementDeadZone ? Mathf.Sign(body.linearVelocity.y) : 0f;
+            animator.SetFloat(VerticalVelocityHash, verticalDir);
         }
 
         private bool MoveAlongPlatformRoute(

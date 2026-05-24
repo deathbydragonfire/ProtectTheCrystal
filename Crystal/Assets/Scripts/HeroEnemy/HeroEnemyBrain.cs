@@ -16,7 +16,6 @@ namespace Crystal.HeroEnemy
         [SerializeField] private CombatHealth selfHealth;
         [SerializeField] private HeroEnemyMotor motor;
         [SerializeField] private HeroEnemyAttackController attacks;
-        [SerializeField] private HeroSpriteFrameAnimator spriteAnimator;
         [SerializeField] private Crystal.HeroDefeatedEventChannel heroDefeatedEventChannel;
 
         [Header("Health Priorities")]
@@ -111,9 +110,6 @@ namespace Crystal.HeroEnemy
 
             if (attacks == null)
                 attacks = GetComponent<HeroEnemyAttackController>();
-
-            if (spriteAnimator == null)
-                spriteAnimator = GetComponent<HeroSpriteFrameAnimator>();
         }
 
         private void OnEnable()
@@ -300,8 +296,6 @@ namespace Crystal.HeroEnemy
                 case HeroEnemyDecision.JumpForLineOfSight:
                     if (!MoveTowardGoal(GetAimTargetPosition(), true))
                         motor?.JumpForLineOfSight(GetAimTargetPosition());
-
-                    spriteAnimator?.Play(HeroAnimationAction.Jump);
                     break;
                 case HeroEnemyDecision.ApproachGroundTarget:
                 case HeroEnemyDecision.ApproachTarget:
@@ -349,7 +343,6 @@ namespace Crystal.HeroEnemy
             if (distance <= healingConsumeDistance)
             {
                 motor?.StopHorizontal();
-                spriteAnimator?.Play(HeroAnimationAction.Heal, true);
                 pickup.TryConsume(selfHealth);
                 return;
             }
@@ -376,14 +369,12 @@ namespace Crystal.HeroEnemy
             }
 
             motor?.RetreatFrom(targetTransform.position, allowRetreatJump);
-            spriteAnimator?.Play(HeroAnimationAction.Retreat);
         }
 
         private void Idle()
         {
             currentDecision = HeroEnemyDecision.Idle;
             motor?.StopHorizontal();
-            spriteAnimator?.Play(HeroAnimationAction.Idle);
             nextDecisionTime = Time.time + missingTargetIdleDelay;
         }
 
@@ -401,11 +392,6 @@ namespace Crystal.HeroEnemy
                 motor?.MoveToward(goalPosition);
             }
 
-            if (usingPlatforms && motor != null && !motor.IsGrounded)
-                spriteAnimator?.Play(HeroAnimationAction.Jump);
-            else
-                spriteAnimator?.Play(HeroAnimationAction.Run);
-
             return usingPlatforms;
         }
 
@@ -417,11 +403,6 @@ namespace Crystal.HeroEnemy
 
             if (!usingPlatforms)
                 return false;
-
-            if (motor != null && !motor.IsGrounded)
-                spriteAnimator?.Play(HeroAnimationAction.Jump);
-            else
-                spriteAnimator?.Play(HeroAnimationAction.Run);
 
             return true;
         }
@@ -453,7 +434,6 @@ namespace Crystal.HeroEnemy
             {
                 currentDecision = HeroEnemyDecision.JumpForLineOfSight;
                 motor?.JumpForLineOfSight(GetNavigationTargetPosition());
-                spriteAnimator?.Play(HeroAnimationAction.Jump);
                 return;
             }
 
@@ -461,14 +441,12 @@ namespace Crystal.HeroEnemy
             {
                 currentDecision = HeroEnemyDecision.Retreat;
                 motor?.MoveAwayFrom(targetTransform.position);
-                spriteAnimator?.Play(HeroAnimationAction.Retreat);
                 return;
             }
 
             currentDecision = HeroEnemyDecision.ApproachTarget;
             motor?.StopHorizontal();
             motor?.FacePosition(targetTransform.position);
-            spriteAnimator?.Play(HeroAnimationAction.Idle);
             nextDecisionTime = Time.time + blockedRouteRetryDelay;
         }
 
@@ -575,7 +553,6 @@ namespace Crystal.HeroEnemy
                 motor?.DashAwayFrom(targetTransform.position);
 
             currentDecision = HeroEnemyDecision.Retreat;
-            spriteAnimator?.Play(HeroAnimationAction.Hurt, true);
         }
 
         private void HandleDied(CombatHealth health)
@@ -583,7 +560,6 @@ namespace Crystal.HeroEnemy
             currentDecision = HeroEnemyDecision.Dead;
             attacks?.CancelCurrentAction();
             motor?.StopAllMovement();
-            spriteAnimator?.Play(HeroAnimationAction.Death, true);
             heroDefeatedEventChannel?.Raise();
             enabled = false;
         }

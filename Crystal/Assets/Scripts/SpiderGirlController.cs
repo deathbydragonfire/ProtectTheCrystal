@@ -33,6 +33,11 @@ public class SpiderGirlController : MonoBehaviour
     private static readonly int AnimCeiling   = Animator.StringToHash("ceiling");
     private static readonly int AnimJump      = Animator.StringToHash("jump");
     private static readonly int AnimBackwards = Animator.StringToHash("backwards");
+    private static readonly int AnimLanded    = Animator.StringToHash("landed");
+
+    // ── Constants ────────────────────────────────────────────────────────────
+
+    private const float JumpDelay = 0.1f;
 
     // ── State ────────────────────────────────────────────────────────────────
 
@@ -43,6 +48,7 @@ public class SpiderGirlController : MonoBehaviour
     private bool _isOnCeiling;
     private bool _isAirborne;
     private bool _jumpRequested;
+    private bool _jumpInProgress;
 
     /// <summary>Horizontal input axis value from the Move action.</summary>
     public float HorizontalInput { get; private set; }
@@ -161,19 +167,25 @@ public class SpiderGirlController : MonoBehaviour
             CurrentSurface = SurfaceType.Floor;
 
         if (_isOnGround != wasOnGround)
+        {
             Debug.Log($"[SpiderGirl] DetectSurfaces — onGround changed to {_isOnGround}");
+            if (_isOnGround)
+                _animator?.SetTrigger(AnimLanded);
+        }
 
         if (_isOnCeiling != wasOnCeiling)
         {
             Debug.Log($"[SpiderGirl] DetectSurfaces — onCeiling changed to {_isOnCeiling}");
             _spriteFlip?.Flip();
             _animator?.SetBool(AnimCeiling, _isOnCeiling);
+            if (_isOnCeiling)
+                _animator?.SetTrigger(AnimLanded);
         }
     }
 
     private void ApplyGravityMode()
     {
-        if (_isOnCeiling)
+        if (_isOnCeiling && !_jumpInProgress)
         {
             // Stick to ceiling — disable gravity and zero vertical velocity.
             if (_rb.gravityScale != 0f)
@@ -188,7 +200,7 @@ public class SpiderGirlController : MonoBehaviour
         }
         else
         {
-            // On ground or airborne — gravity always active, physics handles the floor.
+            // On ground, airborne, or mid-jump — gravity always active.
             if (_rb.gravityScale != gravityScale)
             {
                 _rb.gravityScale = gravityScale;
@@ -199,7 +211,7 @@ public class SpiderGirlController : MonoBehaviour
 
     private void ApplyMovement()
     {
-        if (_isOnCeiling)
+        if (_isOnCeiling && !_jumpInProgress)
         {
             // Full horizontal control on ceiling; vertical is locked by ApplyGravityMode.
             _rb.linearVelocity = new Vector2(HorizontalInput * moveSpeed, 0f);
@@ -225,13 +237,30 @@ public class SpiderGirlController : MonoBehaviour
         // Jump direction is always away from the current surface.
         float direction = _isOnGround ? 1f : -1f;
 
+        // Trigger animation first, then defer the physics impulse to let it lead.
+        _animator?.ResetTrigger(AnimLanded);
+        _animator?.SetTrigger(AnimJump);
+        _jumpInProgress = true;
+        StartCoroutine(ApplyJumpDelayed(direction));
+        Debug.Log($"[SpiderGirl] TryJump — jump animation triggered from {CurrentSurface}; impulse deferred by {JumpDelay}s");
+    }
+
+    private System.Collections.IEnumerator ApplyJumpDelayed(float direction)
+    {
+        yield return new WaitForSeconds(JumpDelay);
+        ApplyJumpImpulse(direction);
+    }
+
+    /// <summary>Applies the actual physics velocity for a jump.</summary>
+    private void ApplyJumpImpulse(float direction)
+    {
+        _jumpInProgress = false;
+
         // Ensure gravity is on so the arc resolves correctly.
-        _rb.gravityScale  = gravityScale;
+        _rb.gravityScale   = gravityScale;
         _rb.linearVelocity = new Vector2(HorizontalInput * moveSpeed, direction * jumpForce);
 
-        _animator?.SetTrigger(AnimJump);
-
-        Debug.Log($"[SpiderGirl] TryJump — launched from {CurrentSurface}. direction={direction}, velocity={_rb.linearVelocity}");
+        Debug.Log($"[SpiderGirl] ApplyJumpImpulse — launched from {CurrentSurface}. direction={direction}, velocity={_rb.linearVelocity}");
     }
 
     // ── Gizmos ───────────────────────────────────────────────────────────────

@@ -1,0 +1,193 @@
+fileFormatVersion: 2
+guid: fdc804fcf168d1f49b6c40074941b613
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8965496842064078827
+    second: ciela_jump-up_spritesheet_0
+  - first:
+      213: 6616637627819547904
+    second: ciela_jump-up_spritesheet_1
+  - first:
+      213: -5800243998817851538
+    second: ciela_jump-up_spritesheet_2
+  - first:
+      213: 1788937211202821340
+    second: ciela_jump-up_spritesheet_3
+  - first:
+      213: -8166555204582351057
+    second: ciela_jump-up_spritesheet_4
+  - first:
+      213: -8460664579640218319
+    second: ciela_jump-up_spritesheet_5
+  - first:
+      213: -6036451118595081142
+    second: ciela_jump-up_spritesheet_6
+  - first:
+      213: 7547134634322462514
+    second: ciela_jump-up_spritesheet_7
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 503
+        width: 2339
+        height: 2674
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4c712ca0b73a3ca0800000000000000
+      internalID: -6036451118595081142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ciela_jump-up_spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 3984
+        y: 478
+        width: 2192
+        height: 2699
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23786d6a6feccb860800000000000000
+      internalID: 7547134634322462514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 8dba94d51d0b4024585a9db337b0fb0e
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      ciela_jump-up_spritesheet_0: -8965496842064078827
+      ciela_jump-up_spritesheet_1: 6616637627819547904
+      ciela_jump-up_spritesheet_2: -5800243998817851538
+      ciela_jump-up_spritesheet_3: 1788937211202821340
+      ciela_jump-up_spritesheet_4: -8166555204582351057
+      ciela_jump-up_spritesheet_5: -8460664579640218319
+      ciela_jump-up_spritesheet_6: -6036451118595081142
+      ciela_jump-up_spritesheet_7: 7547134634322462514
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
