@@ -20,6 +20,15 @@ public class SpiderGirlController : MonoBehaviour
     [SerializeField] private float jumpForce = 14f;
     [SerializeField] private float gravityScale = 3f;
 
+    [Header("Attack")]
+    [SerializeField] private GameObject attackHitbox;
+    [SerializeField] private float attackHitboxDuration = 0.5f;
+    [SerializeField] private float attackDamage = 20f;
+
+    [Header("Interact")]
+    [SerializeField] private Transform placePickup;
+    [SerializeField] private GameObject healthPickupPrefab;
+
     [Header("Surface Detection")]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private Transform ceilingCheck;
@@ -34,6 +43,7 @@ public class SpiderGirlController : MonoBehaviour
     private static readonly int AnimJump      = Animator.StringToHash("jump");
     private static readonly int AnimBackwards = Animator.StringToHash("backwards");
     private static readonly int AnimLanded    = Animator.StringToHash("landed");
+    private static readonly int AnimAttack    = Animator.StringToHash("attack");
 
     // ── Constants ────────────────────────────────────────────────────────────
 
@@ -44,6 +54,7 @@ public class SpiderGirlController : MonoBehaviour
     private Rigidbody2D _rb;
     private Animator    _animator;
     private SpriteFlip  _spriteFlip;
+    private AttackHitbox _attackHitboxComponent;
     private bool _isOnGround;
     private bool _isOnCeiling;
     private bool _isAirborne;
@@ -88,6 +99,12 @@ public class SpiderGirlController : MonoBehaviour
 
         if (_animator == null)
             Debug.LogWarning("[SpiderGirl] Awake — no Animator found in children.");
+
+        if (attackHitbox != null)
+            _attackHitboxComponent = attackHitbox.GetComponent<AttackHitbox>();
+
+        if (_attackHitboxComponent == null)
+            Debug.LogWarning("[SpiderGirl] Awake — no AttackHitbox component found on attackHitbox.");
 
         Debug.Log($"[SpiderGirl] Awake — Rigidbody2D initialised. gravityScale={gravityScale}, freezeRotation=true");
     }
@@ -147,6 +164,61 @@ public class SpiderGirlController : MonoBehaviour
         if (!value.isPressed) return;
         _jumpRequested = true;
         Debug.Log("[SpiderGirl] OnJump — jump request buffered");
+    }
+
+    /// <summary>Receives the Attack action. Only triggers when grounded.</summary>
+    public void OnAttack(InputValue value)
+    {
+        if (!value.isPressed) return;
+
+        if (!_isOnGround)
+        {
+            Debug.Log("[SpiderGirl] OnAttack — blocked, not grounded");
+            return;
+        }
+
+        _animator?.SetTrigger(AnimAttack);
+        StartCoroutine(ActivateAttackHitbox());
+        Debug.Log("[SpiderGirl] OnAttack — attack trigger set");
+    }
+
+    /// <summary>Receives the Interact action. Spawns a health pickup at the placePickup marker's world position.</summary>
+    public void OnInteract(InputValue value)
+    {
+        if (!value.isPressed) return;
+
+        if (placePickup == null)
+        {
+            Debug.LogWarning("[SpiderGirl] OnInteract — placePickup transform not assigned");
+            return;
+        }
+
+        if (healthPickupPrefab == null)
+        {
+            Debug.LogWarning("[SpiderGirl] OnInteract — healthPickupPrefab not assigned");
+            return;
+        }
+
+        Instantiate(healthPickupPrefab, placePickup.position, Quaternion.identity);
+        Debug.Log($"[SpiderGirl] OnInteract — health pickup spawned at {placePickup.position}");
+    }
+
+    private System.Collections.IEnumerator ActivateAttackHitbox()
+    {
+        if (attackHitbox == null)
+        {
+            Debug.LogWarning("[SpiderGirl] ActivateAttackHitbox — no attackHitbox assigned");
+            yield break;
+        }
+
+        _attackHitboxComponent?.Arm(attackDamage);
+        attackHitbox.SetActive(true);
+        Debug.Log("[SpiderGirl] ActivateAttackHitbox — hitbox enabled");
+
+        yield return new WaitForSeconds(attackHitboxDuration);
+
+        attackHitbox.SetActive(false);
+        Debug.Log("[SpiderGirl] ActivateAttackHitbox — hitbox disabled");
     }
 
     // ── Private Logic ────────────────────────────────────────────────────────

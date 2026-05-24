@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fd1267af4b1e2a498eee8a73a8922ba, type: 3}
+  m_Name: DefaultDecisionWeights
+  m_EditorClassIdentifier: Assembly-CSharp::Crystal.HeroEnemy.HeroEnemyDecisionWeights
+  leapWithHeightScore: 80
+  leapWithoutHeightScore: 35
+  targetStationaryThreshold: 0.5
+  targetStationaryBonus: 30
+  targetOnGroundThreshold: 0.4
+  targetOnGroundLeapBonus: 50
+  targetLowHealthLeapBonus: 20
+  bowBaseScore: 40
+  movingBowBaseScore: 30
+  recentBowTimeThreshold: 2.2
+  recentBowPenalty: -20
+  postPlungePressureBowBonus: 60
+  approachBaseScore: 50

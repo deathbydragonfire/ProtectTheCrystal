@@ -19,7 +19,7 @@ namespace Crystal.HeroEnemy
         [SerializeField] private Crystal.HeroDefeatedEventChannel heroDefeatedEventChannel;
 
         [Header("Health Priorities")]
-        [SerializeField, Range(0f, 1f)] private float heroLowHealthPercent = 0.35f;
+        [SerializeField, Range(0f, 1f)] private float heroLowHealthPercent = 0.5f;
         [SerializeField, Range(0f, 1f)] private float targetFinisherHealthPercent = 0.25f;
 
         [Header("Healing")]
@@ -193,6 +193,12 @@ namespace Crystal.HeroEnemy
 
             bool heroLowHealth = selfHealth != null && selfHealth.HealthPercent <= heroLowHealthPercent;
             HeroHealingPickup healingPickup = heroLowHealth ? FindBestHealingPickup() : null;
+
+            if (heroLowHealth && healingPickup != null)
+            {
+                ApplyDecision(HeroEnemyDecision.SeekHealing, healingPickup, false);
+                return;
+            }
 
             if (_decisionWeights == null)
             {
