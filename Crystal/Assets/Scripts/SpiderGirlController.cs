@@ -182,10 +182,16 @@ public class SpiderGirlController : MonoBehaviour
         Debug.Log("[SpiderGirl] OnAttack — attack trigger set");
     }
 
-    /// <summary>Receives the Interact action. Spawns a health pickup at the placePickup marker's world position.</summary>
+    /// <summary>Receives the Interact action. Spawns a health pickup at the placePickup marker's world position. Only allowed when grounded.</summary>
     public void OnInteract(InputValue value)
     {
         if (!value.isPressed) return;
+
+        if (!_isOnGround)
+        {
+            Debug.Log("[SpiderGirl] OnInteract — blocked, not grounded");
+            return;
+        }
 
         if (placePickup == null)
         {
