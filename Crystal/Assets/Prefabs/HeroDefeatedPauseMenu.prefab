@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 100004}
   - component: {fileID: 100005}
   - component: {fileID: 100006}
+  - component: {fileID: 100007}
+  - component: {fileID: 100008}
   m_Layer: 5
   m_Name: HeroDefeatedPauseMenu
   m_TagString: Untagged
@@ -76,8 +78,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
@@ -119,6 +121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroDefeatedEventChannel: {fileID: 11400000, guid: 3d786f6cb5524721b75ba357cbfb1a86, type: 2}
+  playerDiedEventChannel: {fileID: 11400000, guid: f7b86dfdac60a264388e80d01e47db46, type: 2}
   menuRoot: {fileID: 100010}
   menuCanvasGroup: {fileID: 100012}
   resumeButtonRectTransform: {fileID: 100101}
@@ -247,6 +250,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroDefeatedEventChannel: {fileID: 11400000, guid: 3d786f6cb5524721b75ba357cbfb1a86, type: 2}
+  testHotkeyEnabled: 1
+--- !u!114 &100007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8f8d04857b44f11b80c61cc2f714f7a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  playerVictoryEventChannel: {fileID: 11400000, guid: 788f3314d07816c4aa021ba80717b60d, type: 2}
+  fadeImage: {fileID: 100083}
+  victoryScreenCanvasGroup: {fileID: 0}
+  victoryTextCanvasGroup: {fileID: 0}
+  backToMainMenuButtonCanvasGroup: {fileID: 0}
+  victoryTextLabel: {fileID: 0}
+  backToMainMenuButton: {fileID: 0}
+  backToMainMenuButtonLabel: {fileID: 0}
+  menuFont: {fileID: 12800000, guid: dd2e91fb4df65fa488c6ec5dc9a29c5e, type: 3}
+  victoryText: Victory!
+  backToMainMenuButtonText: Back to Main Menu
+  revealDelay: 0.25
+  fadeDuration: 0.8
+  whiteHoldDuration: 2
+  victoryTextFadeDuration: 0.45
+  buttonRevealDelay: 0.3
+  buttonFadeDuration: 0.45
+  freezeTimeDuringVictory: 1
+  mainMenuSceneName: Main Manu
+  victoryTextColor: {r: 0.08, g: 0.08, b: 0.08, a: 1}
+  buttonColor: {r: 0.12, g: 0.12, b: 0.12, a: 1}
+  buttonTextColor: {r: 1, g: 1, b: 1, a: 1}
+  buttonNormalScale: {x: 1, y: 1, z: 1}
+  buttonHoverScale: {x: 1.08, y: 1.08, z: 1}
+--- !u!114 &100008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ae5ff0954d4bd1a3d9ec3684fd10cd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  playerVictoryEventChannel: {fileID: 11400000, guid: 788f3314d07816c4aa021ba80717b60d, type: 2}
   testHotkeyEnabled: 1
 --- !u!1 &100010
 GameObject:

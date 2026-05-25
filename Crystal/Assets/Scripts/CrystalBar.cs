@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,8 @@ namespace Crystal
     /// </summary>
     public sealed class CrystalBar : MonoBehaviour
     {
+        public event Action Filled;
+
         /// <summary>The RectTransform of the fill — anchorMax.x is driven to represent the charge percent.</summary>
         [SerializeField] private RectTransform fillRect;
         [SerializeField] private Image fillImage;
@@ -38,8 +41,10 @@ namespace Crystal
 
         private static readonly Color ColorEmpty = Color.red;
         private static readonly Color ColorFull  = Color.white;
+        private const float FullFillThreshold = 0.999f;
 
         private float _targetFillPercent;
+        private bool _filledRaised;
 
         private RectTransform _rectTransform;
         private Vector2 _baseAnchoredPosition;
@@ -52,6 +57,7 @@ namespace Crystal
             _rectTransform = GetComponent<RectTransform>();
             _baseAnchoredPosition = _rectTransform.anchoredPosition;
             _targetFillPercent = Mathf.Clamp01(fillPercent);
+            _filledRaised = _targetFillPercent >= FullFillThreshold;
 
             if (crystalTransform != null)
                 _baseCrystalLocalPosition = crystalTransform.localPosition;
@@ -82,6 +88,8 @@ namespace Crystal
         {
             percent = Mathf.Clamp01(percent);
             fillPercent = percent;
+            if (percent < FullFillThreshold)
+                _filledRaised = false;
 
             fillRect.anchorMax = new Vector2(percent, fillRect.anchorMax.y);
             fillImage.color = Color.Lerp(ColorEmpty, ColorFull, percent);
@@ -123,11 +131,21 @@ namespace Crystal
             SetFill(to);
             _fillCoroutine = null;
 
-            if (Mathf.Approximately(to, 1f))
+            if (to >= FullFillThreshold)
             {
                 SfxPlayer.Play("ready");
                 StartVibrate();
+                RaiseFilledOnce();
             }
+        }
+
+        private void RaiseFilledOnce()
+        {
+            if (_filledRaised)
+                return;
+
+            _filledRaised = true;
+            Filled?.Invoke();
         }
 
         private void StartVibrate()

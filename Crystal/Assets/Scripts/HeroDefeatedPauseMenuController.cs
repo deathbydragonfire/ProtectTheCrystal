@@ -8,12 +8,11 @@ namespace Crystal
 {
     public sealed class HeroDefeatedPauseMenuController : MonoBehaviour
     {
-        private enum SequenceType { HeroDefeated, PlayerDied, PlayerVictory }
+        private enum SequenceType { HeroDefeated, PlayerDied }
 
         [Header("Events")]
         [SerializeField] private HeroDefeatedEventChannel heroDefeatedEventChannel;
         [SerializeField] private PlayerDiedEventChannel playerDiedEventChannel;
-        [SerializeField] private PlayerVictoryEventChannel playerVictoryEventChannel;
 
         [Header("UI References")]
         [SerializeField] private GameObject menuRoot;
@@ -42,7 +41,6 @@ namespace Crystal
         [SerializeField] private string titleText = "PAUSED";
         [SerializeField] private string heroDefeatedTitleText = "RETRY?";
         [SerializeField] private string playerDiedTitleText = "YOU DIED";
-        [SerializeField] private string playerVictoryTitleText = "YOU WIN";
         [SerializeField] private string resumeButtonText = "RESUME";
         [SerializeField] private string settingsButtonText = "SETTINGS";
         [SerializeField] private string restartButtonText = "RESTART";
@@ -55,7 +53,6 @@ namespace Crystal
         [SerializeField] private float clickPressDuration = 0.12f;
         [SerializeField] private float postClickDelay = 0.2f;
         [SerializeField] private float fadeDuration = 0.8f;
-        [SerializeField] private float victoryWhiteHoldDuration = 2f;
         [SerializeField] private AnimationCurve cursorMotionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
         [Header("Cursor")]
@@ -148,18 +145,12 @@ namespace Crystal
             TryStartSequence(SequenceType.PlayerDied);
         }
 
-        /// <summary>Triggers the victory sequence (direct fade, no fake cursor) for the true win outcome.</summary>
-        public void PlayVictorySequence()
-        {
-            TryStartSequence(SequenceType.PlayerVictory);
-        }
-
         private void TryStartSequence(SequenceType sequenceType)
         {
             if (sequenceRoutine != null)
                 return;
 
-            // PlayerDied only needs the fade image — skip full UI validation.
+            // PlayerDied only needs the fade image - skip full UI validation.
             if (sequenceType == SequenceType.PlayerDied)
             {
                 if (fadeImage == null)
@@ -198,10 +189,6 @@ namespace Crystal
             else
                 Debug.LogWarning("[HeroDefeatedPauseMenuController] No PlayerDiedEventChannel assigned. The sequence can still be triggered via PlayPlayerDiedSequence().", this);
 
-            if (playerVictoryEventChannel != null)
-                playerVictoryEventChannel.Subscribe(PlayVictorySequence);
-            else
-                Debug.LogWarning("[HeroDefeatedPauseMenuController] No PlayerVictoryEventChannel assigned. The sequence can still be triggered via PlayVictorySequence().", this);
         }
 
         private void OnDisable()
@@ -211,9 +198,6 @@ namespace Crystal
 
             if (playerDiedEventChannel != null)
                 playerDiedEventChannel.Unsubscribe(PlayPlayerDiedSequence);
-
-            if (playerVictoryEventChannel != null)
-                playerVictoryEventChannel.Unsubscribe(PlayVictorySequence);
 
             if (sequenceRoutine != null)
             {
@@ -283,9 +267,7 @@ namespace Crystal
 
         private IEnumerator RunSequenceRoutine()
         {
-            if (activeSequenceType == SequenceType.PlayerVictory)
-                yield return PlayVictorySequenceRoutine();
-            else if (activeSequenceType == SequenceType.PlayerDied)
+            if (activeSequenceType == SequenceType.PlayerDied)
                 yield return PlayPlayerDiedSequenceRoutine();
             else
                 yield return PlayFakeRestartSequenceRoutine();
@@ -340,24 +322,6 @@ namespace Crystal
             ReloadScene();
         }
 
-        private IEnumerator PlayVictorySequenceRoutine()
-        {
-            SetTitleForSequence();
-
-            if (freezeTimeDuringSequence)
-            {
-                previousTimeScale = Time.timeScale;
-                Time.timeScale = 0f;
-                timeScaleFrozen = true;
-            }
-
-            yield return WaitForUnscaledSeconds(revealDelay);
-            SfxPlayer.Play("final");
-            yield return FadeToColor(Color.white);
-            yield return WaitForUnscaledSeconds(victoryWhiteHoldDuration);
-            ReloadScene();
-        }
-
         private void SetTitleForSequence()
         {
             if (titleLabel == null)
@@ -367,7 +331,6 @@ namespace Crystal
             {
                 SequenceType.HeroDefeated  => heroDefeatedTitleText,
                 SequenceType.PlayerDied    => playerDiedTitleText,
-                SequenceType.PlayerVictory => playerVictoryTitleText,
                 _                          => titleText,
             };
         }
