@@ -16,8 +16,6 @@ namespace Crystal.HeroEnemy
         [SerializeField] private CombatHealth selfHealth;
         [SerializeField] private HeroEnemyMotor motor;
         [SerializeField] private HeroEnemyAttackController attacks;
-        [SerializeField] private Crystal.HeroDefeatedEventChannel heroDefeatedEventChannel;
-
         [Header("Health Priorities")]
         [SerializeField, Range(0f, 1f)] private float heroLowHealthPercent = 0.5f;
         [SerializeField, Range(0f, 1f)] private float targetFinisherHealthPercent = 0.25f;
@@ -566,7 +564,6 @@ namespace Crystal.HeroEnemy
             currentDecision = HeroEnemyDecision.Dead;
             attacks?.CancelCurrentAction();
             motor?.StopAllMovement();
-            heroDefeatedEventChannel?.Raise();
             enabled = false;
         }
 

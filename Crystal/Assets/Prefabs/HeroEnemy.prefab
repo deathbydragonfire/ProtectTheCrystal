@@ -125,6 +125,7 @@ MonoBehaviour:
   startingHealth: 100
   invulnerable: 0
   disableGameObjectOnDeath: 0
+  currentHealth: 0
 --- !u!114 &100005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +179,7 @@ MonoBehaviour:
   platformGoalRepathDistance: 0.75
   landingSettleTime: 0.08
   airborneRouteHoldTime: 0.12
+  animator: {fileID: 0}
   spriteFacesRightByDefault: 1
 --- !u!114 &100009
 MonoBehaviour:
@@ -224,7 +226,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   motor: {fileID: 100005}
+  facingController: {fileID: 0}
   spriteAnimator: {fileID: 100007}
+  animator: {fileID: 0}
   bowOrigin: {fileID: 100041}
   plungeHitOrigin: {fileID: 100051}
   targetHitLayers:
@@ -234,6 +238,7 @@ MonoBehaviour:
   bowDamage: 8
   bowAimDuration: 0.35
   movingBowAimDuration: 0.5
+  bowFireDelay: 0.2
   bowRecovery: 0.2
   bowCooldown: 1.1
   movingBowCooldownMultiplier: 1.4
@@ -317,8 +322,6 @@ MonoBehaviour:
   selfHealth: {fileID: 100004}
   motor: {fileID: 100005}
   attacks: {fileID: 100006}
-  spriteAnimator: {fileID: 100007}
-  heroDefeatedEventChannel: {fileID: 11400000, guid: 3d786f6cb5524721b75ba357cbfb1a86, type: 2}
   heroLowHealthPercent: 0.35
   targetFinisherHealthPercent: 0.25
   healingItemDefinition: {fileID: 11400000, guid: 653ca22119c9460cbe649feeacfed43d, type: 2}

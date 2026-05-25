@@ -25,3 +25,7 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 475571bf41f67f5499cc4fc900f9b9ca, type: 3}
   - Key: final
     Clip: {fileID: 8300000, guid: a5a29bc1f05880c47870b787064b5f2c, type: 3}
+  - Key: heal
+    Clip: {fileID: 8300000, guid: 9569366c9bc25464cb91662302b03ffa, type: 3}
+  - Key: ready
+    Clip: {fileID: 8300000, guid: 2a668bb4018fd9c4ba69a387b8dd5682, type: 3}

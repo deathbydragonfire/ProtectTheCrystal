@@ -304,8 +304,6 @@ public class SpiderGirlController : MonoBehaviour
             // Preserve vertical velocity — gravity and physics handle it.
             _rb.linearVelocity = new Vector2(HorizontalInput * moveSpeed, _rb.linearVelocity.y);
         }
-
-        Debug.Log($"[SpiderGirl] ApplyMovement — velocity={_rb.linearVelocity}, onGround={_isOnGround}, onCeiling={_isOnCeiling}, airborne={_isAirborne}");
     }
 
     private void TryJump()

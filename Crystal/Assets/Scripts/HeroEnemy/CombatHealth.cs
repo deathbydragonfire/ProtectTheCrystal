@@ -12,7 +12,7 @@ namespace Crystal.HeroEnemy
         [SerializeField] private bool invulnerable;
         [SerializeField] private bool disableGameObjectOnDeath;
 
-        private float currentHealth;
+        [SerializeField] private float currentHealth;
         private bool initialized;
         private bool died;
 
@@ -52,6 +52,8 @@ namespace Crystal.HeroEnemy
 
             float previousHealth = currentHealth;
             currentHealth = Mathf.Max(0f, currentHealth - damageInfo.Amount);
+
+            Debug.Log($"[CombatHealth] {gameObject.name} took {damageInfo.Amount} damage. Health: {previousHealth} → {currentHealth}");
 
             if (!Mathf.Approximately(previousHealth, currentHealth))
             {
@@ -105,6 +107,7 @@ namespace Crystal.HeroEnemy
                 return;
 
             died = true;
+            Debug.Log($"[CombatHealth] {gameObject.name} died — firing Died event. Subscribers: {Died?.GetInvocationList().Length ?? 0}");
             Died?.Invoke(this);
 
             if (disableGameObjectOnDeath)

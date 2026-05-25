@@ -8,8 +8,12 @@ namespace Crystal
 {
     public sealed class HeroDefeatedPauseMenuController : MonoBehaviour
     {
-        [Header("Event")]
+        private enum SequenceType { HeroDefeated, PlayerDied, PlayerVictory }
+
+        [Header("Events")]
         [SerializeField] private HeroDefeatedEventChannel heroDefeatedEventChannel;
+        [SerializeField] private PlayerDiedEventChannel playerDiedEventChannel;
+        [SerializeField] private PlayerVictoryEventChannel playerVictoryEventChannel;
 
         [Header("UI References")]
         [SerializeField] private GameObject menuRoot;
@@ -36,6 +40,9 @@ namespace Crystal
         [Header("Text")]
         [SerializeField] private Font menuFont;
         [SerializeField] private string titleText = "PAUSED";
+        [SerializeField] private string heroDefeatedTitleText = "RETRY?";
+        [SerializeField] private string playerDiedTitleText = "YOU DIED";
+        [SerializeField] private string playerVictoryTitleText = "YOU WIN";
         [SerializeField] private string resumeButtonText = "RESUME";
         [SerializeField] private string settingsButtonText = "SETTINGS";
         [SerializeField] private string restartButtonText = "RESTART";
@@ -48,6 +55,7 @@ namespace Crystal
         [SerializeField] private float clickPressDuration = 0.12f;
         [SerializeField] private float postClickDelay = 0.2f;
         [SerializeField] private float fadeDuration = 0.8f;
+        [SerializeField] private float victoryWhiteHoldDuration = 2f;
         [SerializeField] private AnimationCurve cursorMotionCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
         [Header("Cursor")]
@@ -118,6 +126,7 @@ namespace Crystal
         [SerializeField, FormerlySerializedAs("restartClickSound")] private AudioClip menuClickSound;
 
         private Coroutine sequenceRoutine;
+        private SequenceType activeSequenceType;
         private float previousTimeScale = 1f;
         private bool timeScaleFrozen;
         private RectTransform hoveredButtonRectTransform;
@@ -127,15 +136,46 @@ namespace Crystal
         private float cursorMoveSoundMutedUntilTime;
         private Vector2 previousCursorMoveSoundDirection;
 
+        /// <summary>Triggers the fake-restart sequence for the hero-defeated (early kill) outcome.</summary>
         public void PlayRestartSequence()
+        {
+            TryStartSequence(SequenceType.HeroDefeated);
+        }
+
+        /// <summary>Triggers the fake-restart sequence for the player-died outcome.</summary>
+        public void PlayPlayerDiedSequence()
+        {
+            TryStartSequence(SequenceType.PlayerDied);
+        }
+
+        /// <summary>Triggers the victory sequence (direct fade, no fake cursor) for the true win outcome.</summary>
+        public void PlayVictorySequence()
+        {
+            TryStartSequence(SequenceType.PlayerVictory);
+        }
+
+        private void TryStartSequence(SequenceType sequenceType)
         {
             if (sequenceRoutine != null)
                 return;
 
-            if (!ValidateRequiredReferences())
+            // PlayerDied only needs the fade image — skip full UI validation.
+            if (sequenceType == SequenceType.PlayerDied)
+            {
+                if (fadeImage == null)
+                {
+                    Debug.LogError("[HeroDefeatedPauseMenuController] Missing required reference: fadeImage. Cannot run PlayerDied sequence.", this);
+                    return;
+                }
+            }
+            else if (!ValidateRequiredReferences())
+            {
                 return;
+            }
 
-            sequenceRoutine = StartCoroutine(PlayRestartSequenceRoutine());
+            Debug.Log($"[HeroDefeatedPauseMenuController] Starting sequence: {sequenceType}");
+            activeSequenceType = sequenceType;
+            sequenceRoutine = StartCoroutine(RunSequenceRoutine());
         }
 
         private void Awake()
@@ -148,19 +188,32 @@ namespace Crystal
 
         private void OnEnable()
         {
-            if (heroDefeatedEventChannel == null)
-            {
-                Debug.LogWarning("[HeroDefeatedPauseMenuController] No hero defeated event channel is assigned. The menu can still be started through PlayRestartSequence().", this);
-                return;
-            }
+            if (heroDefeatedEventChannel != null)
+                heroDefeatedEventChannel.Subscribe(PlayRestartSequence);
+            else
+                Debug.LogWarning("[HeroDefeatedPauseMenuController] No HeroDefeatedEventChannel assigned. The sequence can still be triggered via PlayRestartSequence().", this);
 
-            heroDefeatedEventChannel.Subscribe(PlayRestartSequence);
+            if (playerDiedEventChannel != null)
+                playerDiedEventChannel.Subscribe(PlayPlayerDiedSequence);
+            else
+                Debug.LogWarning("[HeroDefeatedPauseMenuController] No PlayerDiedEventChannel assigned. The sequence can still be triggered via PlayPlayerDiedSequence().", this);
+
+            if (playerVictoryEventChannel != null)
+                playerVictoryEventChannel.Subscribe(PlayVictorySequence);
+            else
+                Debug.LogWarning("[HeroDefeatedPauseMenuController] No PlayerVictoryEventChannel assigned. The sequence can still be triggered via PlayVictorySequence().", this);
         }
 
         private void OnDisable()
         {
             if (heroDefeatedEventChannel != null)
                 heroDefeatedEventChannel.Unsubscribe(PlayRestartSequence);
+
+            if (playerDiedEventChannel != null)
+                playerDiedEventChannel.Unsubscribe(PlayPlayerDiedSequence);
+
+            if (playerVictoryEventChannel != null)
+                playerVictoryEventChannel.Unsubscribe(PlayVictorySequence);
 
             if (sequenceRoutine != null)
             {
@@ -228,8 +281,34 @@ namespace Crystal
             ApplySerializedVisuals();
         }
 
-        private IEnumerator PlayRestartSequenceRoutine()
+        private IEnumerator RunSequenceRoutine()
         {
+            if (activeSequenceType == SequenceType.PlayerVictory)
+                yield return PlayVictorySequenceRoutine();
+            else if (activeSequenceType == SequenceType.PlayerDied)
+                yield return PlayPlayerDiedSequenceRoutine();
+            else
+                yield return PlayFakeRestartSequenceRoutine();
+        }
+
+        private IEnumerator PlayPlayerDiedSequenceRoutine()
+        {
+            if (freezeTimeDuringSequence)
+            {
+                previousTimeScale = Time.timeScale;
+                Time.timeScale = 0f;
+                timeScaleFrozen = true;
+            }
+
+            yield return WaitForUnscaledSeconds(revealDelay);
+            yield return FadeToColor(fadeColor);
+            yield return WaitForUnscaledSeconds(0.5f);
+            ReloadScene();
+        }
+
+        private IEnumerator PlayFakeRestartSequenceRoutine()
+        {
+            SetTitleForSequence();
             ShowMenuImmediate();
 
             if (freezeTimeDuringSequence)
@@ -257,8 +336,40 @@ namespace Crystal
             SetCursorScale(cursorNormalScale);
             yield return WaitForUnscaledSeconds(postClickDelay);
 
-            yield return FadeToBlack();
+            yield return FadeToColor(fadeColor);
             ReloadScene();
+        }
+
+        private IEnumerator PlayVictorySequenceRoutine()
+        {
+            SetTitleForSequence();
+
+            if (freezeTimeDuringSequence)
+            {
+                previousTimeScale = Time.timeScale;
+                Time.timeScale = 0f;
+                timeScaleFrozen = true;
+            }
+
+            yield return WaitForUnscaledSeconds(revealDelay);
+            SfxPlayer.Play("final");
+            yield return FadeToColor(Color.white);
+            yield return WaitForUnscaledSeconds(victoryWhiteHoldDuration);
+            ReloadScene();
+        }
+
+        private void SetTitleForSequence()
+        {
+            if (titleLabel == null)
+                return;
+
+            titleLabel.text = activeSequenceType switch
+            {
+                SequenceType.HeroDefeated  => heroDefeatedTitleText,
+                SequenceType.PlayerDied    => playerDiedTitleText,
+                SequenceType.PlayerVictory => playerVictoryTitleText,
+                _                          => titleText,
+            };
         }
 
         private IEnumerator MoveCursorToRestartButton()
@@ -536,20 +647,27 @@ namespace Crystal
             return new Vector2(localCenter.x, localCenter.y) + cursorTargetOffset;
         }
 
-        private IEnumerator FadeToBlack()
+        private IEnumerator FadeToColor(Color targetColor)
         {
             float elapsed = 0f;
             SetFadeAlpha(0f);
 
+            // Drive the fade image toward the target color at alpha 0 first so it
+            // starts invisible regardless of the previous color.
+            if (fadeImage != null)
+                fadeImage.color = new Color(targetColor.r, targetColor.g, targetColor.b, 0f);
+
             while (elapsed < fadeDuration)
             {
                 float percent = Mathf.Clamp01(elapsed / fadeDuration);
-                SetFadeAlpha(percent);
+                if (fadeImage != null)
+                    fadeImage.color = new Color(targetColor.r, targetColor.g, targetColor.b, percent);
                 elapsed += Time.unscaledDeltaTime;
                 yield return null;
             }
 
-            SetFadeAlpha(1f);
+            if (fadeImage != null)
+                fadeImage.color = new Color(targetColor.r, targetColor.g, targetColor.b, 1f);
         }
 
         private void ReloadScene()

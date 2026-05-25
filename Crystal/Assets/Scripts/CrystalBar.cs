@@ -20,6 +20,12 @@ namespace Crystal
 
         [SerializeField, Range(0f, 1f)] private float fillPercent = 1f;
 
+        /// <summary>
+        /// The logical fill percentage [0, 1] — the final target of any in-progress animation.
+        /// Use this to evaluate game conditions rather than the animated visual value.
+        /// </summary>
+        public float FillPercent => _targetFillPercent;
+
         /// <summary>Duration in seconds for the fill animation when adding charge.</summary>
         [SerializeField] private float fillDuration = 0.2f;
 
@@ -33,6 +39,8 @@ namespace Crystal
         private static readonly Color ColorEmpty = Color.red;
         private static readonly Color ColorFull  = Color.white;
 
+        private float _targetFillPercent;
+
         private RectTransform _rectTransform;
         private Vector2 _baseAnchoredPosition;
         private Vector3 _baseCrystalLocalPosition;
@@ -43,6 +51,7 @@ namespace Crystal
         {
             _rectTransform = GetComponent<RectTransform>();
             _baseAnchoredPosition = _rectTransform.anchoredPosition;
+            _targetFillPercent = Mathf.Clamp01(fillPercent);
 
             if (crystalTransform != null)
                 _baseCrystalLocalPosition = crystalTransform.localPosition;
@@ -91,12 +100,12 @@ namespace Crystal
         /// </summary>
         public void AddFill(float amount)
         {
-            float targetPercent = Mathf.Clamp01(fillPercent + amount);
+            _targetFillPercent = Mathf.Clamp01(_targetFillPercent + amount);
 
             if (_fillCoroutine != null)
                 StopCoroutine(_fillCoroutine);
 
-            _fillCoroutine = StartCoroutine(AnimateFill(fillPercent, targetPercent, fillDuration));
+            _fillCoroutine = StartCoroutine(AnimateFill(fillPercent, _targetFillPercent, fillDuration));
         }
 
         private IEnumerator AnimateFill(float from, float to, float duration)
