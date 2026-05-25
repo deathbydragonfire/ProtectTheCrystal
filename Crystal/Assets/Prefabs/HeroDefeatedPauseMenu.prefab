@@ -250,7 +250,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heroDefeatedEventChannel: {fileID: 11400000, guid: 3d786f6cb5524721b75ba357cbfb1a86, type: 2}
-  testHotkeyEnabled: 1
 --- !u!114 &100007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -300,7 +299,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   playerVictoryEventChannel: {fileID: 11400000, guid: 788f3314d07816c4aa021ba80717b60d, type: 2}
-  testHotkeyEnabled: 1
 --- !u!1 &100010
 GameObject:
   m_ObjectHideFlags: 0
