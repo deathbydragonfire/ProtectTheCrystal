@@ -64,6 +64,8 @@ namespace Crystal.HeroEnemy
         private static readonly int WalkingHash = Animator.StringToHash("walking");
         private static readonly int VerticalVelocityHash = Animator.StringToHash("verticalVelocity");
 
+        private const float WalkStepInterval = 0.4f;
+
         private Rigidbody2D body;
         private Collider2D bodyCollider;
         private readonly Collider2D[] groundProbeHits = new Collider2D[8];
@@ -87,6 +89,7 @@ namespace Crystal.HeroEnemy
         private float activePerchHorizontalWindow;
         private Vector2 expectedPlatformLandingPoint;
         private Collider2D expectedPlatformLandingCollider;
+        private float nextWalkStepTime;
 
         public bool IsGrounded => CheckGrounded();
         public Vector2 NavigationPosition => GetGroundProbePosition();
@@ -300,6 +303,12 @@ namespace Crystal.HeroEnemy
             animator.SetBool(WalkingHash, isWalking);
             float verticalDir = Mathf.Abs(body.linearVelocity.y) > movementDeadZone ? Mathf.Sign(body.linearVelocity.y) : 0f;
             animator.SetFloat(VerticalVelocityHash, verticalDir);
+
+            if (isWalking && Time.time >= nextWalkStepTime)
+            {
+                nextWalkStepTime = Time.time + WalkStepInterval;
+                SfxPlayer.Play("walk");
+            }
         }
 
         private bool MoveAlongPlatformRoute(

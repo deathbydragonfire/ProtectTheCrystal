@@ -9,6 +9,7 @@ namespace Crystal
     /// Uses anchorMax.x on the fill RectTransform to represent the charge percent.
     /// The fill color lerps from red (0%) to white (100%).
     /// The crystal shine SpriteRenderer alpha lerps from 0 (0%) to 1 (100%).
+    /// Vibrates up and down while the bar is full.
     /// </summary>
     public sealed class CrystalBar : MonoBehaviour
     {
@@ -22,12 +23,30 @@ namespace Crystal
         /// <summary>Duration in seconds for the fill animation when adding charge.</summary>
         [SerializeField] private float fillDuration = 0.2f;
 
+        [Header("Full Vibration")]
+        [SerializeField] private Transform crystalTransform;
+        [SerializeField] private float vibrateAmplitude = 3f;
+        [SerializeField] private float vibrateFrequency = 12f;
+
         [SerializeField] private CrystalChunkCollectedEventChannel eventChannel;
 
         private static readonly Color ColorEmpty = Color.red;
         private static readonly Color ColorFull  = Color.white;
 
+        private RectTransform _rectTransform;
+        private Vector2 _baseAnchoredPosition;
+        private Vector3 _baseCrystalLocalPosition;
         private Coroutine _fillCoroutine;
+        private Coroutine _vibrateCoroutine;
+
+        private void Awake()
+        {
+            _rectTransform = GetComponent<RectTransform>();
+            _baseAnchoredPosition = _rectTransform.anchoredPosition;
+
+            if (crystalTransform != null)
+                _baseCrystalLocalPosition = crystalTransform.localPosition;
+        }
 
         private void OnEnable()
         {
@@ -94,6 +113,50 @@ namespace Crystal
 
             SetFill(to);
             _fillCoroutine = null;
+
+            if (Mathf.Approximately(to, 1f))
+            {
+                SfxPlayer.Play("ready");
+                StartVibrate();
+            }
+        }
+
+        private void StartVibrate()
+        {
+            if (_vibrateCoroutine != null)
+                return;
+
+            _vibrateCoroutine = StartCoroutine(VibrateLoop());
+        }
+
+        private void StopVibrate()
+        {
+            if (_vibrateCoroutine == null)
+                return;
+
+            StopCoroutine(_vibrateCoroutine);
+            _vibrateCoroutine = null;
+            _rectTransform.anchoredPosition = _baseAnchoredPosition;
+
+            if (crystalTransform != null)
+                crystalTransform.localPosition = _baseCrystalLocalPosition;
+        }
+
+        private IEnumerator VibrateLoop()
+        {
+            float time = 0f;
+
+            while (true)
+            {
+                time += Time.deltaTime;
+                float offset = Mathf.Sin(time * vibrateFrequency) * vibrateAmplitude;
+                _rectTransform.anchoredPosition = _baseAnchoredPosition + new Vector2(0f, offset);
+
+                if (crystalTransform != null)
+                    crystalTransform.localPosition = _baseCrystalLocalPosition + new Vector3(0f, offset, 0f);
+
+                yield return null;
+            }
         }
     }
 }

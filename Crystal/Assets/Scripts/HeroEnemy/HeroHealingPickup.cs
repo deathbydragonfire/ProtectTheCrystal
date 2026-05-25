@@ -34,6 +34,7 @@ namespace Crystal.HeroEnemy
                 return false;
 
             target.Heal(HealAmount);
+            SfxPlayer.Play("heal");
             consumed = true;
 
             if (destroyOnConsume)

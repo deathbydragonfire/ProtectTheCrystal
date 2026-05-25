@@ -48,6 +48,7 @@ public class SpiderGirlController : MonoBehaviour
     // ── Constants ────────────────────────────────────────────────────────────
 
     private const float JumpDelay = 0.1f;
+    private const float WalkStepInterval = 0.35f;
 
     // ── State ────────────────────────────────────────────────────────────────
 
@@ -60,6 +61,7 @@ public class SpiderGirlController : MonoBehaviour
     private bool _isAirborne;
     private bool _jumpRequested;
     private bool _jumpInProgress;
+    private float _nextWalkStepTime;
 
     /// <summary>Horizontal input axis value from the Move action.</summary>
     public float HorizontalInput { get; private set; }
@@ -124,6 +126,8 @@ public class SpiderGirlController : MonoBehaviour
         {
             ApplyMovement();
         }
+
+        TickWalkSound();
     }
 
     // ── Input Callbacks (wired via Player Input component) ───────────────────
@@ -179,6 +183,7 @@ public class SpiderGirlController : MonoBehaviour
 
         _animator?.SetTrigger(AnimAttack);
         StartCoroutine(ActivateAttackHitbox());
+        Crystal.SfxPlayer.Play("player_attack");
         Debug.Log("[SpiderGirl] OnAttack — attack trigger set");
     }
 
@@ -341,8 +346,17 @@ public class SpiderGirlController : MonoBehaviour
         Debug.Log($"[SpiderGirl] ApplyJumpImpulse — launched from {CurrentSurface}. direction={direction}, velocity={_rb.linearVelocity}");
     }
 
-    // ── Gizmos ───────────────────────────────────────────────────────────────
+    private void TickWalkSound()
+    {
+        bool isWalking = (_isOnGround || _isOnCeiling) && Mathf.Abs(HorizontalInput) > 0f;
+        if (!isWalking || Time.time < _nextWalkStepTime)
+            return;
 
+        _nextWalkStepTime = Time.time + WalkStepInterval;
+        Crystal.SfxPlayer.Play("walk");
+    }
+
+    // ── Gizmos ───────────────────────────────────────────────────────────────
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)

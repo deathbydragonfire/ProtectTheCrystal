@@ -48,6 +48,7 @@ public class AttackHitbox : MonoBehaviour
         );
 
         target.ApplyDamage(info);
+        Crystal.SfxPlayer.Play("hit");
         Debug.Log($"[AttackHitbox] Hit '{other.name}' for {_damage} damage.");
     }
 }

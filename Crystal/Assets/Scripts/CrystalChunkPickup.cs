@@ -28,6 +28,7 @@ namespace Crystal
             else
             {
                 eventChannel.Raise(fillAmount);
+                SfxPlayer.Play("gem");
                 Debug.Log($"[CrystalChunkPickup] Collected — raised event with {fillAmount * 100f:F0}% fill.");
             }
 

@@ -149,6 +149,7 @@ namespace Crystal.HeroEnemy
             if (bowFireDelay > 0f)
                 yield return new WaitForSeconds(bowFireDelay);
             ShootArrow(targetHealth, targetTransform);
+            SfxPlayer.Play("arrow");
             BowFired?.Invoke();
 
             nextBowTime = Time.time + GetCooldown(bowCooldown, aggressive) * (moving ? movingBowCooldownMultiplier : 1f);
